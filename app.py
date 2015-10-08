@@ -25,14 +25,25 @@ def ivr():
     response = plivoxml.Response()
     if request.method == 'GET':
         # GetDigit XML Docs - http://plivo.com/docs/xml/getdigits/
-        getdigits_action_url = url_for('ivr', _external=True)
-        getDigits = plivoxml.GetDigits(action=getdigits_action_url,
-                                       method='POST', timeout=7, numDigits=1,
-                                       retries=1)
+        #getdigits_action_url = url_for('ivr', _external=True)
+        #getDigits = plivoxml.GetDigits(action=getdigits_action_url,
+         #                              method='POST', timeout=7, numDigits=1,
+          #                             retries=1)
 
-        getDigits.addSpeak(IVR_MESSAGE)
-        response.add(getDigits)
-        response.addSpeak(NO_INPUT_MESSAGE)
+        #getDigits.addSpeak(IVR_MESSAGE)
+        #response.add(getDigits)
+        #response.addSpeak(NO_INPUT_MESSAGE)
+		digit = request.form.get('Digits')
+
+        if digit == "1":
+            # Fetch a random joke using the Reddit API.
+            joke = joke_from_reddit()
+            response.addSpeak(joke)
+        elif digit == "2":
+            # Listen to a song
+            response.addPlay(PLIVO_SONG)
+        else:
+            response.addSpeak(WRONG_INPUT_MESSAGE)
 
         return Response(str(response), mimetype='text/xml')
 
